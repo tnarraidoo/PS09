@@ -1,6 +1,6 @@
 ---
 title: "STAT/MATH 495: Problem Set 09"
-author: "WRITE YOUR NAME(S) HERE"
+author: "Tasheena Narraidoo"
 date: "2017-11-07"
 output:
   html_document:
@@ -25,7 +25,7 @@ library(tidyverse)
 
 # Collaboration
 
-Please indicate who you collaborated with on this assignment: 
+Please indicate who you collaborated with on this assignment: -
 
 
 
@@ -71,11 +71,13 @@ results.
 
 **Answers**:
 
-1.
-1.
-1.
-1.
+1. On running KMC 10 times on `observations_1` we see that the results are inconsistent as the clusters have markedly different values at each run. The data points are clearly partitioned by a "line" but the slope of that line varies with no clearly defined origin.
 
+1. The inconsistency stems from the nature of the initial random cluster assignment of the data points. The fact that the points are scarttered throughout makes it dificult to have a clearly defined separation so that the cluster centers do not gravitate towards a partidular location.
+
+1. On running KMC 10 times on `observations_2` we see that the results are  consistent in the sense that as at each run one cluster one is at the top right corner while the other cluster is at the bottom left corner but no cluster is clearly defined as being either cluster 1 or cluster 2 specifically at every run as they are sometimes swapped.
+
+1. The inconsistency in the postioning of cluster 1 and cluster 2 stems from the initial random cluster assignment of the data points and the initial positioning of the cluster center. If the center of a particular cluster, say cluster 1, is closer to the top right, that cluster will be assigned as cluster 1 and the other cluster in the bottom left corner will be assigned as cluster 2 and vice versa.
 
 
 # Bonus question: Code your own
@@ -84,7 +86,7 @@ Read ISLR page 388 Algorithm 10.1 and implement k-means clustering from scratch.
 Don't worry about doing it for general $k$; keep it simple and do it for $k=2$
 specifically. Apply it to `observations_2` from above.
 
-```{r}
+```{r, eval=FALSE}
 # Hint:
 library(proxy)
 A <- data_frame(
@@ -99,3 +101,36 @@ distance_matrix <- proxy::dist(x=A, y=B)
 distance_matrix
 apply(distance_matrix, 1, which.min)
 ```
+
+
+```{r}
+# Set observations to be dataset 2
+A <- observations_2
+n  <- nrow(A)
+
+# Step 1 of algorithm 10.1 : Randomly assign a number to each observation from 1:k
+df1 <- A %>% 
+  mutate(cluster = sample(1:2, size=n, replace=T)) 
+
+# Step 2 : Iterate until the cluster assignments stop changing:
+for (i in 1:n) {
+  # Step 2a : Compute cluster centroid
+  c1 <- df1 %>%
+    filter(cluster == 1) %>% 
+    summarize(x1 = mean(x1), x2 = mean(x2)) 
+    
+   c2 <- df1 %>%
+    filter(cluster == 2) %>% 
+    summarize(x1 = mean(x1), x2 = mean(x2)) 
+  
+  B <- rbind(c1,c2)
+  
+  # Step 2b : Assign each observation to the cluster whose centroid is closest
+  distance_matrix <- proxy::dist(x=A, y=B)
+  cluster_reassignment <- apply(distance_matrix, 1, which.min)
+
+  df1 <- df1 %>%
+    mutate(cluster = as.factor(cluster_reassignment))
+}
+```
+
