@@ -110,7 +110,7 @@ n  <- nrow(A)
 
 # Step 1 of algorithm 10.1 : Randomly assign a number to each observation from 1:k
 df1 <- A %>% 
-  mutate(cluster = sample(1:2, size=n, replace=T)) 
+  mutate(cluster =  as.factor(sample(1:2, size=n, replace=T)))
 
 # Step 2 : Iterate until the cluster assignments stop changing:
 for (i in 1:n) {
