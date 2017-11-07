@@ -141,3 +141,16 @@ for (i in 1:n) {
 }
 ```
 
+```{r}
+# Add cluster ID's to cluster_centers
+B <- B %>% 
+  mutate(cluster=as.factor(1:2))
+
+# graph results
+ggplot(NULL, aes(x=x1, y=x2, col=cluster)) +
+  geom_point(data=df1) +
+  geom_point(data=B, size=5) +
+  labs(title = "k-means implementation results") 
+```
+
+
