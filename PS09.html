@@ -299,7 +299,7 @@ for (i in 1:n) {
     filter(cluster == 1) %&gt;% 
     summarize(x1 = mean(x1), x2 = mean(x2)) 
     
-   c2 &lt;- df1 %&gt;%
+  c2 &lt;- df1 %&gt;%
     filter(cluster == 2) %&gt;% 
     summarize(x1 = mean(x1), x2 = mean(x2)) 
   
@@ -309,8 +309,15 @@ for (i in 1:n) {
   distance_matrix &lt;- proxy::dist(x=A, y=B)
   cluster_reassignment &lt;- apply(distance_matrix, 1, which.min)
 
+  # Update the cluster reassignment
   df1 &lt;- df1 %&gt;%
     mutate(cluster = as.factor(cluster_reassignment))
+
+  # stopping criterion : two consecutive iterations generate same value
+  if(i != 1 &amp;&amp; df1 == temp){
+    break
+  }
+  temp &lt;- df1
 }</code></pre>
 </div>
 
