@@ -257,15 +257,15 @@ ggplot(NULL, aes(x=x1, y=x2, col=cluster)) +
 <ol style="list-style-type: decimal">
 <li>Run KMC 10 times on <code>observations_1</code> and comment on the consistency of the results.</li>
 <li>Speculate on the root cause of any consistency or inconsistency in the results.</li>
-<li>Run KMC 10 times on <code>observations_2</code> and comment on the consistentcy of the results.</li>
+<li>Run KMC 10 times on <code>observations_2</code> and comment on the consistency of the results.</li>
 <li>Speculate on the root cause of any consistency or inconsistency in the results.</li>
 </ol>
 <p><strong>Answers</strong>:</p>
 <ol style="list-style-type: decimal">
 <li><p>On running KMC 10 times on <code>observations_1</code> we see that the results are inconsistent as the clusters have markedly different values at each run. The data points are clearly partitioned by a “line” but the slope of that line varies with no clearly defined origin.</p></li>
-<li><p>The inconsistency stems from the nature of the initial random cluster assignment of the data points. The fact that the points are scarttered throughout makes it dificult to have a clearly defined separation so that the cluster centers do not gravitate towards a partidular location.</p></li>
+<li><p>The inconsistency stems from the nature of the initial random cluster assignment of the data points. The fact that the points are scattered throughout makes it difficult to have a clearly defined separation so that the cluster centers do not gravitate towards a particular location.</p></li>
 <li><p>On running KMC 10 times on <code>observations_2</code> we see that the results are consistent in the sense that as at each run one cluster one is at the top right corner while the other cluster is at the bottom left corner but no cluster is clearly defined as being either cluster 1 or cluster 2 specifically at every run as they are sometimes swapped.</p></li>
-<li><p>The inconsistency in the postioning of cluster 1 and cluster 2 stems from the initial random cluster assignment of the data points and the initial positioning of the cluster center. If the center of a particular cluster, say cluster 1, is closer to the top right, that cluster will be assigned as cluster 1 and the other cluster in the bottom left corner will be assigned as cluster 2 and vice versa.</p></li>
+<li><p>The inconsistency in the positioning of cluster 1 and cluster 2 stems from the initial random cluster assignment of the data points and the initial positioning of the cluster center. If the center of a particular cluster, say cluster 1, is closer to the top right, that cluster will be assigned as cluster 1 and the other cluster in the bottom left corner will be assigned as cluster 2 and vice versa.</p></li>
 </ol>
 </div>
 <div id="bonus-question-code-your-own" class="section level1">
@@ -309,7 +309,7 @@ for (i in 1:n) {
   distance_matrix &lt;- proxy::dist(x=A, y=B)
   cluster_reassignment &lt;- apply(distance_matrix, 1, which.min)
 
-  # Update the cluster reassignment
+  # Update the cluster re-assignment
   df1 &lt;- df1 %&gt;%
     mutate(cluster = as.factor(cluster_reassignment))
 
@@ -319,11 +319,12 @@ for (i in 1:n) {
   }
   temp &lt;- df1
 }</code></pre>
-<pre class="r"><code># Add cluster ID's to cluster_centers
+<pre class="r"><code># Visualizing results
+# Add cluster ID's to cluster_centers
 B &lt;- B %&gt;% 
   mutate(cluster=as.factor(1:2))
 
-# graph results
+# Graph results
 ggplot(NULL, aes(x=x1, y=x2, col=cluster)) +
   geom_point(data=df1) +
   geom_point(data=B, size=5) +
